@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-piyush
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-piyush
+  template:
+    metadata:
+      labels:
+        app: hello-piyush
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: html
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: html
+          configMap:
+            name: hello-piyush-html
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hello-piyush-html
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Hello Piyush</title>
+    </head>
+    <body>
+        <h1>Hello Piyush</h1>
+    </body>
+    </html>
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-piyush-service
+spec:
+  type: NodePort
+  selector:
+    app: hello-piyush
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30080
