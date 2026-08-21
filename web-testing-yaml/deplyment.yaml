@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-testing
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: web-testing
+  template:
+    metadata:
+      labels:
+        app: web-testing
+    spec:
+      containers:
+        - name: web-testing
+          image: piyush191996/index-testingg_v1:latest
+          ports:
+            - containerPort: 80
